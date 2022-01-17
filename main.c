@@ -1,196 +1,191 @@
-// Siddhesh Ballal
-// A106 Assignment 4
-/*
-Department of Information Technology has a student's club named 'Pinnacle Club'. Students of the Second, third and final year of the department can be granted membership on request. Similarly,
-one may cancel the membership of the club. The first node is reserved for the president of the club and the last node is reserved for the secretary of the club. Write C program to maintain club member’s information using a singly linked list. Store student PRN and Name. Write functions to
-a) Add and delete
-b) Compute the total number of members of the club
-c) Display members of the club
-d) Display list in reverse order using recursion
-*/
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+#include<stdlib.h>
+#include<string.h>
+struct node*create();
+void add(int, struct node*);
+void addS(struct node*);
+struct node* delete(struct node*);
+struct node* deleteS(struct node*);
+void display(struct node*);
+void deleteM(int prn1,struct node*);
+void reverse();
 struct node
 {
-  int PRN, RollNo;
-  char Name[20];
-  struct node *NextAddress;
+ int roll;
+ int prn;
+ char name[20];
+ struct node*next;
 };
+int main()
+{
+ int choice,m,prn1;
+ struct node*head;
+ char ch;
+ do{
+ printf("\n Enter your choice \n 1.Create \n 2.Addmember \n 3.delete president \n 4.Add secretory \n 5.display \n 6.delete secretory \n 7.Delete member \n 8.Reverse:");
+ scanf("%d",&choice);
+ switch(choice)
+ {
+ case 1:
+ head=create();
+ break;
 
+ case 2:
+ printf("enter no of members:");
+ scanf("%d",&m);
+ add(m,head);
+ break;
+
+ case 3:
+ head=delete(head);
+ display(head);
+ break;
+
+ case 4:
+ addS(head);
+ break;
+
+ case 5:
+ display(head);
+ break;
+
+ case 6:
+ deleteS(head);
+ display(head);
+ break;
+ case 7:
+ printf("enter prn of node member to be deleted:");
+ scanf("%d",&prn1);
+ deleteM(prn1,head);
+ display(head);
+ break;
+ case 8:
+ reverse(head);
+ break;
+ default:
+ printf("Thank you!!!");
+
+ }
+ printf("\ndo you want to continue(y/n):");
+ scanf(" %c",&ch);
+ }
+ while(ch=='y');
+
+
+}
 struct node* create()
 {
-  int p_prn, p_rollno;
-  char p_Name[20];
-  struct node *head;
-
-  head = (struct node*) malloc (sizeof(struct node));
-  printf("Enter PRN of the President:  ");
-  scanf("%d", &p_prn);
-  printf("Enter Roll no. of the President:  ");
-  scanf("%d", &p_rollno);
-  printf("Enter Name of the President:  ");
-  scanf("%s", p_Name);
-
-  head -> PRN = p_prn;
-  head -> RollNo = p_rollno;
-  strcpy(head -> Name, p_Name);
-  head -> NextAddress = NULL;
-  return head;
+ int p,r;
+ char n[20];
+ struct node*head;
+ head=(struct node*)malloc(sizeof(struct node));
+ printf("enter prn, roll no, name of president:");
+ scanf("%d%d",&r,&p);
+ scanf("%s",n);
+ head->prn=p;
+ head->roll=r;
+ strcpy(head->name,n);
+ head->next=NULL;
+ return head;
 }
-
-void add_members(int m, struct node* head)
+void add(int m, struct node*head)
 {
-  int m_prn, m_rollno;
-  char m_Name[20];
-  struct node *newnode, *prev;
-  prev = head;
+ struct node*temp,*q;
+ q=head;
+ int p,r;
+ char n[20];
+ for(int i=0;i<m;i++)
+ {
+ temp=(struct node*)malloc(sizeof(struct node));
+ printf("enter prn, roll no, name of president:");
+ scanf("%d%d",&p,&r);
+ scanf("%s",n);
+ temp->prn=p;
+ temp->roll=r;
+ strcpy(temp->name,n);
 
-  for(int i=0; i<m; i++)
-  {
-    newnode = (struct node*) malloc (sizeof(struct node));
-    printf("\nEnter PRN of the new Member:  ");
-    scanf("%d", &m_prn);
-    printf("Enter Roll no. of the new Member:  ");
-    scanf("%d", &m_rollno);
-    printf("Enter Name of the new Member:  ");
-    scanf("%s",m_Name);
-    
-    newnode -> PRN = m_prn;
-    newnode -> RollNo = m_rollno;
-    strcpy(newnode -> Name, m_Name);
-
-    prev -> NextAddress = newnode;
-    prev = newnode;
-  }
+ q->next=temp;
+ q=temp;
+ }
 }
-
-void display(struct node* head)
+void display(struct node *head)
 {
-  while(head != NULL)
-  {
-    printf("\nName: %s", head->Name);
-    printf("\nPRN: %d", head->PRN);
-    printf("\nRoll no: %d\n", head->RollNo);
-
-    head = head -> NextAddress;
-  }
+ printf("\nPRNNo\tRollNo\tName\n");
+ while (head != NULL)
+ {
+ printf("%d\t\t%d\t\t%s", head->prn, head->roll,
+head->name);
+ head = head->next;
+ printf("\n");
+ }
 }
-
-void add_secretary(struct node* head)
+void addS(struct node*head)
 {
-  struct node *Secretary;
-  int s_prn, s_rollno;
-  char s_name[20];
-
-  Secretary = (struct node*) malloc (sizeof(struct node));
-  printf("\nEnter PRN of the Secretary:  ");
-  scanf("%d", &s_prn);
-  printf("Enter Roll no. of the Secretary:  ");
-  scanf("%d", &s_rollno);
-  printf("Enter Name of the Secretary:  ");
-  scanf("%s", s_name);
-
-  Secretary -> PRN = s_prn;
-  Secretary -> RollNo = s_rollno;
-  strcpy(Secretary -> Name , s_name);
-
-  Secretary -> NextAddress = NULL;
-
-  while(head != NULL && head -> NextAddress != NULL)
-  {
-    head = head -> NextAddress;
-  }
-  head -> NextAddress = Secretary;
+ char n1[20];
+struct node*new;
+new=(struct node*)malloc(sizeof(struct node));
+printf("enter prn,roll no and name of secretory:\n");
+scanf("%d",&new->prn);
+scanf("%d",&new->roll);
+scanf("%s",n1);
+strcpy(new->name,n1);
+new->next=NULL;
+while(head!=NULL && head->next!=NULL)
+{
+ head=head->next;
 }
-
-void Deletemem(struct node* head, int prn)
-{
-  struct node* p;
-  while(head -> PRN != prn)
-  {
-    p = head -> NextAddress;
-    head= head->NextAddress;
-  }
-  p->NextAddress = head->NextAddress;
-  free(head);
+head->next=new;
 }
-
-struct node* Deletesec(struct node* head)
+struct node *delete (struct node *head)
 {
-  while(head != NULL && head -> NextAddress != NULL)
-  {
-    head = head -> NextAddress;
-  }
-  free(head);
-  return 0;
+ struct node *p;
+ p = head->next;
+ free(head);
+ return p;
 }
-
-int main() 
+struct node* deleteS(struct node *head)
 {
-  int menucheck=1, menucontrol;
-  
-  struct node *Principal, *Secratary;
-  Principal = create();
+ struct node*prv;
+ while (head != NULL && head->next != NULL)
+ {
+ prv=head;
+ head = head->next;
+ }
+ prv->next=NULL;
+ free(head);
+ return head;
+}
+void deleteM(int prn1,struct node*head)
+{
+ struct node*q;
 
-  while (menucheck == 1)
-  {
-    printf("\nEnter:\n1 to Add new member\n2 to add Secretary\n3 to Delete previous member\n4 to Compute total no. of members\n5 to Display members of the club\n6 to Delete secretary\n7 to Display list in reverse order using recursion\n8 to Exit:\n\n");
-    scanf("%d", &menucontrol);
+ while(head->prn!=prn1)
+ {
+ q=head;
+ head=head->next;
+ }
+ q->next=head->next;
+ free(head);
+}
+void reverse(struct node*head)
+{
+ struct node *prevNode, *curNode;
+ if(head != NULL)
+ {
+ prevNode = head;
+ curNode = head->next;
+ head = head->next;
+ prevNode->next = NULL;
+ while(head != NULL)
+ {
+ head = head->next;
+ curNode->next = prevNode;
+ prevNode = curNode;
+ curNode = head;
+ }
+ head = prevNode;
+ printf("SUCCESSFULLY REVERSED LIST\n");
+ display(head);
 
-    switch(menucontrol)
-    {
-      case(1):
-        printf("How many members do you want to add? :  ");
-        int m;
-        scanf("%d", &m);
-        add_members(m, Principal);
-        printf("Updated linked list:\n");
-        display(Principal);
-        break;
-
-      case(2):
-        add_secretary(Principal);
-        printf("Updated linked list:\n");
-        display(Principal);
-        break;
-      
-      case(3):
-        printf("\nEnter prn of member who is to be deleted:\n");
-        int prn;
-        scanf("%d",&prn);
-        Deletemem(Principal,prn);
-        printf("\nUpdated linked list:\n");
-        display(Principal);
-        break;
-
-      case(4):
-        break;
-        
-      case(5):
-        display(Principal);
-        break;
-
-      case(6):
-        Deletesec(Principal);
-        printf("Updated linked list:\n");
-  //      display(Principal);
-        break;
-      
-      case(7):
-        break;
-
-      case(8):
-        printf("Program Exited");
-        menucheck = 0;
-        break;
-      
-      default:
-        printf("Invalid Input");
-        break;
-    }
-  }
-  return 0;
+ }
 }
